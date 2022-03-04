@@ -51,6 +51,10 @@ def proceso_pago():
             elif descuento_socio == 15:
                 descuento_del_quince = 15 * (precio_del_plan/100)
                 pago_con_descuento = precio_del_plan - descuento_del_quince
+                if pago_con_descuento < 0:
+                    print(f'\nEl precio a pagar es de:\n $0 para el socio {name_socio}, cantidad de aplicaciones: {cantidad_de_aplicaciones}')
+                    pago_socios(id_socio,precio_del_plan)
+    
                 aplicacion_descuento(id_socio)
                 print(f'El precio a pagar es de:\n {pago_con_descuento} para el socio {name_socio}, cantidad de aplicaciones: {cantidad_de_aplicaciones}')
                 pago_socios(id_socio,precio_del_plan)
@@ -58,7 +62,10 @@ def proceso_pago():
             elif descuento_socio == 20:
                 descuento_del_veinte = 20 * (precio_del_plan/100)
                 pago_con_descuento = precio_del_plan - descuento_del_veinte
-        
+                if pago_con_descuento < 0:
+                    print(f'\nEl precio a pagar es de:\n $0 para el socio {name_socio}, cantidad de aplicaciones: {cantidad_de_aplicaciones}')
+                    pago_socios(id_socio,precio_del_plan)
+                    
                 aplicacion_descuento(id_socio)
                 print(f'El precio a pagar es de:\n {pago_con_descuento} para el socio {name_socio}, cantidad de aplicaciones: {cantidad_de_aplicaciones}')
 
