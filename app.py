@@ -6,12 +6,16 @@ from partner_creation import create_socio
 
 def proceso_pago():
     """
+    Proceso de cobro
     
-    Busco los documentos de socios 
-    de las colecciones mediante el metodo
-    find()
+    Args:
+        None
     
-    """
+    Return:
+        Precio a pagar por cada socio segun plan
+        Pago realizado, documento para cada socio en coleccion pagos
+        Plan del socio actualizado
+        """
     socios = collection_socios.find()                                           
     for socio in socios:
         name_socio = socio["name"]
@@ -20,10 +24,8 @@ def proceso_pago():
         id_socio = socio["_id"]
 
         """
-        
         Consulto los datos  _id y
         precio de los planes de cada socio
-        
         """ 
         cantidad_de_aplicaciones = collection_descuentos.find_one({"_id":id_socio})["cantidad_de_aplicaciones"]
         precio_del_plan = collection_planes.find_one({"_id":id_socio})["precio"]
@@ -82,7 +84,11 @@ def proceso_pago():
 def aplicacion_descuento(id_socio):
     """
     Se resta en 1 la can_de_app de la coleccion descuentos
+    Args:
+        id_socio(ObjectId) _id del socio 
     
+    Return:
+        Descuenta en -1 la coleccions descuentos["cantidad_de_aplicaciones"]
     """
     collection_descuentos.update_one({"_id":id_socio},{"$inc":{"cantidad_de_aplicaciones":-1}})    
          
@@ -90,7 +96,14 @@ def aplicacion_descuento(id_socio):
 def pago_socios(id_socio,precio_del_plan):
     """
     Creo la coleccion "pagos"
-    
+    Args:
+        id_socio(ObjectId)  _id extraido del documento 
+        precio_del_plan(int)    precio del plan de cada socio  
+        
+    Return:  
+        Inserta los documentos en coleccion pagos
+        Fecha_vigencia actualizada (coleccion socios)
+        Actualiza e incrementa en 1 los desc_aplicados 
     """
     
     mes_actual = datetime.today().strftime('%B')
@@ -102,13 +115,9 @@ def pago_socios(id_socio,precio_del_plan):
         collection_pagos.update_one({"_id":id_socio},{"$set":{"_id":id_socio}})
 
     mes_actual = datetime.now().strftime('%B')
-    sumando_un_mes = datetime.now() + relativedelta(months=+1)                                             #Defino la fecha actual y agrego un mes de vigencia
-    obteniendo_nueva_fecha = sumando_un_mes.strftime('%Y-%m-%d')
+    sumando_un_mes = datetime.now() + relativedelta(months=+1)                                             
+    obteniendo_nueva_fecha = sumando_un_mes.strftime('%Y-%m-%d')    
     
-    """
-    Actualizo la fecha_vigencia  en 1 mes, para la coleccion de "socios" 
-    
-    """
     collection_socios.update_one({"_id":id_socio},{"$set":{"fecha_vigencia":obteniendo_nueva_fecha}})      
     socio_plan = collection_socios.find_one({"_id":id_socio})
     cantidad_de_aplicaciones = collection_descuentos.find_one({"_id":id_socio})["cantidad_de_aplicaciones"]

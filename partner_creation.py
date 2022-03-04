@@ -2,6 +2,17 @@ from db import *
 from datetime import datetime
 
 def create_socio():
+    """
+    Args:
+        None
+        
+    Return:
+        Nuevo doc para agregar en coleccion socios
+        Segun plan asignado, varia el % de descuento
+    """
+    
+    
+    
     name_socio = input("Ingrese su nombre: ").lower()                                       #Nombre del socio a agregar 
     lista_planes = ["plan medio","plan semi","plan completo"]
     print(lista_planes)
