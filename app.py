@@ -12,7 +12,6 @@ def proceso_pago():
     find()
     
     """
-    
     socios = collection_socios.find()                                           
     for socio in socios:
         name_socio = socio["name"]
@@ -22,7 +21,7 @@ def proceso_pago():
 
         """
         
-        Consulto los datos necesarios, _id y
+        Consulto los datos  _id y
         precio de los planes de cada socio
         
         """ 
@@ -36,14 +35,15 @@ def proceso_pago():
         
         """
         if estado_socio == "activo" and cantidad_de_aplicaciones > 0:
-            if descuento_socio == 60:                                           #Aplico el descuento segun cada plan asociado
-                descuento_del_10 = 60 * (precio_del_plan/100)
+            if descuento_socio == 10:                                           #Aplico el descuento segun cada plan asociado
+                descuento_del_10 = 10 * (precio_del_plan/100)
                 pago_con_descuento = precio_del_plan - descuento_del_10
                 if pago_con_descuento < 0:
-                    print(f'El precio a pagar es de: $0 para el socio {name_socio}, cantidad de aplicaciones: {cantidad_de_aplicaciones}')
-                    
+                    print(f'\nEl precio a pagar es de:\n $0 para el socio {name_socio}, cantidad de aplicaciones: {cantidad_de_aplicaciones}')
+                    pago_socios(id_socio,precio_del_plan)
+
                 aplicacion_descuento(id_socio)
-                print(f'El precio a pagar es de: {pago_con_descuento} para el socio {name_socio}, cantidad de aplicaciones: {cantidad_de_aplicaciones}')
+                print(f'\nEl precio a pagar es de:\n {pago_con_descuento} para el socio {name_socio}, cantidad de aplicaciones: {cantidad_de_aplicaciones}')
 
                 pago_socios(id_socio,precio_del_plan)
                 
@@ -52,7 +52,7 @@ def proceso_pago():
                 descuento_del_quince = 15 * (precio_del_plan/100)
                 pago_con_descuento = precio_del_plan - descuento_del_quince
                 aplicacion_descuento(id_socio)
-                print(f'El precio a pagar es de: {pago_con_descuento} para el socio {name_socio}, cantidad de aplicaciones: {cantidad_de_aplicaciones}')
+                print(f'El precio a pagar es de:\n {pago_con_descuento} para el socio {name_socio}, cantidad de aplicaciones: {cantidad_de_aplicaciones}')
                 pago_socios(id_socio,precio_del_plan)
 
             elif descuento_socio == 20:
@@ -60,12 +60,12 @@ def proceso_pago():
                 pago_con_descuento = precio_del_plan - descuento_del_veinte
         
                 aplicacion_descuento(id_socio)
-                print(f'El precio a pagar es de: {pago_con_descuento} para el socio {name_socio}, cantidad de aplicaciones: {cantidad_de_aplicaciones}')
+                print(f'El precio a pagar es de:\n {pago_con_descuento} para el socio {name_socio}, cantidad de aplicaciones: {cantidad_de_aplicaciones}')
 
                 pago_socios(id_socio,precio_del_plan)
 
         elif estado_socio == 'activo' and cantidad_de_aplicaciones <= 0:
-            print(f'No tiene descuentos para aplicar el socio {name_socio}, total a pagar: ${precio_del_plan}')
+            print(f'\nNo tiene descuentos para aplicar el socio {name_socio}, total a pagar: ${precio_del_plan}')
             pago_socios(id_socio,precio_del_plan)
 
         else:
@@ -102,22 +102,20 @@ def pago_socios(id_socio,precio_del_plan):
     Actualizo la fecha_vigencia  en 1 mes, para la coleccion de "socios" 
     
     """
-    collection_socios.update_one({"_id":id_socio},{"$set":{"fecha_vigencia":obteniendo_nueva_fecha}})      #Actualizacion del documento de la coleccion "pagos"
+    collection_socios.update_one({"_id":id_socio},{"$set":{"fecha_vigencia":obteniendo_nueva_fecha}})      
     socio_plan = collection_socios.find_one({"_id":id_socio})
     cantidad_de_aplicaciones = collection_descuentos.find_one({"_id":id_socio})["cantidad_de_aplicaciones"]
     if cantidad_de_aplicaciones > 0:
         collection_pagos.update_one({"_id":id_socio},{"$inc":{"descuentos_aplicados":+1}})
 
     pago = collection_pagos.find_one({"_id":id_socio})
-    print(f'Pago realizado:{pago}')
-    print(f'Plan del socio: {socio_plan}\n')
+    print(f'Pago realizado:\n{pago}')
+    print(f'Plan del socio:\n {socio_plan}\n')
      
- 
-
 
 if __name__ == '__main__':
     #Añadir socio
     create_socio()
+
     #Proceso de cobros
     proceso_pago()
-
