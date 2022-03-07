@@ -3,7 +3,7 @@ _Descargue el repositorio en su pc, y abra el proyecto en su editor de código, 
 
 **Clonar repositorio**
 ```
-git clone https://github.com/SolaligueJoel/Challenge-Alkemy
+git clone https://github.com/SolaligueJoel/ChallengeBackend.git
 ```
 **Instar paquetes necesarios**
 
